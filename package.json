@@ -1,9 +1,12 @@
 {
-  "name": "node-meme-scraper",
+  "name": "meme-scraper",
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
-  "repository": "https://github.com/flo951/node-meme-scraper.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flo951/node-meme-scraper.git"
+  },
   "author": "Florian Görlich <florian.goerlich95@gmail.com>",
   "license": "MIT",
   "devDependencies": {
@@ -37,6 +40,16 @@
     "eslint-plugin-react": "7.28.0"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "cheerio": "^1.0.0-rc.10"
-  }
+  },
+  "description": "",
+  "bugs": {
+    "url": "https://github.com/flo951/node-meme-scraper/issues"
+  },
+  "homepage": "https://github.com/flo951/node-meme-scraper#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": []
 }
