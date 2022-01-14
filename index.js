@@ -1,64 +1,78 @@
-import cheerio from 'cheerio';
 import axios from 'axios';
+import cheerio from 'cheerio';
+import fs from 'node:fs';
 import Path from 'node:path';
-import fs from 'fs';
 
-// URL to be scraped for images
+// Creates memes folder if there doesnt exist one
+try {
+  if (!fs.existsSync('./memes')) {
+    fs.mkdirSync('./memes');
+  }
+} catch (err) {
+  console.error(err);
+}
+// Url to scrape and Folder to store memes
 const url = 'https://memegen-link-examples-upleveled.netlify.app/';
 const folder = '/Users/flo/projects/node-meme-scraper/memes/';
+// Create folder memes if it doesnt exist
+// Async function to get HTML data from the Website
+async function getWebsite(siteUrl) {
+  try {
+    // Get HTML of the website with axios
+    const { data } = await axios.get(siteUrl);
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+// Function to search in the HTML data for IMG with an attribute of src
+function getImageSrc(siteHtml) {
+  const $ = cheerio.load(siteHtml);
+  let imgSource = [];
 
-// get website data from server with axios
-const getWebsite = (urlToScrape) => {
-  axios
-    .get(urlToScrape)
-    .then((response) => {
-      // List of 10 first img to download
-      let imgListDown = [];
-      // use cheerio to search in data and store it
-      let $ = cheerio.load(response.data);
+  $('img').each((index, element) => {
+    const imgList = $(element).attr('src');
+    // Push matching items to an array
+    imgSource.push(imgList);
+  });
+  const imgToSave = [];
+  // Loop over the array and store the first 10 items in an array
+  for (let i = 0; i < 10; i++) {
+    imgToSave.push(imgSource[i]);
+  }
+  return imgToSave;
+}
+// Function for downloading the memes and saving them in a folder
+async function downSrc(src, i) {
+  const path = Path.resolve(folder, 0 + [i + 1] + '.jpg');
+  // Creates a writeStream where to store the memes
+  const writer = fs.createWriteStream(path);
+  const response = await axios({
+    url: src,
+    method: 'GET',
+    responseType: 'stream',
+  });
 
-      let imgToSave = [];
-      // store each img in an array
-      $('img').each((index, element) => {
-        let imgSource = $(element).attr('src');
-        imgToSave.push(imgSource);
-        //console.log(imgSource);
-      });
-      // loop over the array and push 10 first to another array
-      for (let i = 0; i < 10; i++) {
-        imgListDown.push(imgToSave[i]);
-        // Download img in memes folder
-        function downloadImage(url, filepath) {
-          return new Promise((resolve, reject) => {});
-        }
-      }
-      console.log(imgListDown);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
-getWebsite(url);
+  // Stores the Memes in folder
+  response.data.pipe(writer);
+}
 /*
-
-https.get(
-  'https://api.memegen.link/images/bad/your_meme_is_bad/and_you_should_feel_bad.jpg?width=300',
-  (res) => {
-    if (res.statusCode === 200) {
-      res
-        .pipe(Fs.createWriteStream(filepath))
-        .on('error', reject)
-        .once('close', () => resolve(filepath));
-    } else {
-      // Consume response data to free up memory
-      res.resume();
-      reject(
-        new Error(
-          `Request Failed With a Status Code: ${res.statusCode}`,
-        ),
-      );
+function removeMemesFolder() {
+  fs.rmdir('./memes', { recursive: true, force: true }, (err) => {
+    if (err) {
+      return console.log('error occurred in deleting directory', err);
     }
-  },
-);
+
+    console.log('Directory deleted successfully');
+  });
+}
+
+removeMemesFolder();
 */
+// Call function getWebsite with url and store the HTML Data
+const websiteToScrape = await getWebsite(url);
+// Call function getImageSrc with const websiteToScrape to look for IMG with attr of src
+const srcList = getImageSrc(websiteToScrape);
+// Call forEach function for the srcList Array and call downSrc function for every img you want to download
+srcList.forEach(downSrc);
+console.log(`Download successful, you can now lough!`);
