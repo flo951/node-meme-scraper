@@ -28,7 +28,7 @@ async function getWebsite(siteUrl) {
 // Function to search in the HTML data for IMG with an attribute of src
 function getImageSrc(siteHtml) {
   const $ = cheerio.load(siteHtml);
-  let imgSource = [];
+  const imgSource = [];
 
   $('img').each((index, element) => {
     const imgList = $(element).attr('src');
