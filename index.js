@@ -75,4 +75,4 @@ const websiteToScrape = await getWebsite(url);
 const srcList = getImageSrc(websiteToScrape);
 // Call forEach function for the srcList Array and call downSrc function for every img you want to download
 srcList.forEach(downSrc);
-console.log(`Download successful, you can now lough!`);
+console.log(`Download successful, you can now laugh!`);
