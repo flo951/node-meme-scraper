@@ -13,7 +13,7 @@ try {
 }
 // Url to scrape and Folder to store memes
 const url = 'https://memegen-link-examples-upleveled.netlify.app/';
-const folder = '/Users/flo/projects/node-meme-scraper/memes/';
+
 // Create folder memes if it doesnt exist
 // Async function to get HTML data from the Website
 async function getWebsite(siteUrl) {
