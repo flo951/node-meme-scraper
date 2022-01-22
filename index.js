@@ -44,7 +44,9 @@ function getImageSrc(siteHtml) {
 }
 // Function for downloading the memes and saving them in a folder
 async function downSrc(src, i) {
-  const path = Path.resolve('./memes', 0 + [i + 1] + '.jpg');
+  const path = Path.resolve(
+    i === 9 ? `./memes/${i + 1}.jpg` : `./memes/0 ${i + 1}.jpg`,
+  );
   // Creates a writeStream where to store the memes
   const writer = fs.createWriteStream(path);
   const response = await axios({
