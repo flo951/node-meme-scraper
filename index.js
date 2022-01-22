@@ -44,7 +44,7 @@ function getImageSrc(siteHtml) {
 }
 // Function for downloading the memes and saving them in a folder
 async function downSrc(src, i) {
-  const path = Path.resolve(folder, 0 + [i + 1] + '.jpg');
+  const path = Path.resolve('./memes', 0 + [i + 1] + '.jpg');
   // Creates a writeStream where to store the memes
   const writer = fs.createWriteStream(path);
   const response = await axios({
@@ -56,19 +56,7 @@ async function downSrc(src, i) {
   // Stores the Memes in folder
   response.data.pipe(writer);
 }
-/*
-function removeMemesFolder() {
-  fs.rmdir('./memes', { recursive: true, force: true }, (err) => {
-    if (err) {
-      return console.log('error occurred in deleting directory', err);
-    }
 
-    console.log('Directory deleted successfully');
-  });
-}
-
-removeMemesFolder();
-*/
 // Call function getWebsite with url and store the HTML Data
 const websiteToScrape = await getWebsite(url);
 // Call function getImageSrc with const websiteToScrape to look for IMG with attr of src
